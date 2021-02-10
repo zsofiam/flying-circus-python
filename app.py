@@ -20,6 +20,7 @@ def index():
                '<a href="/logout">Logout</a>' % (escape(session['email']), escape(session['email']))
     #return 'You are not logged in'
     return '<small>You are not logged in! </small>' \
+           '<br><br>' \
            '<a href="/login">Login</a>'
 
 
