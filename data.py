@@ -1,5 +1,13 @@
 # TODO: add your users and hashed passwords here
-users = {'john@doe.com': '$2b$12$/TYFvXOy9wDQUOn5SKgTzedwiqB6cm.UIfPewBnz0kUQeK9Eu4mSC'}
+import bcrypt
+
+
+users = {'john@doe.com': '$2b$12$/TYFvXOy9wDQUOn5SKgTzedwiqB6cm.UIfPewBnz0kUQeK9Eu4mSC',
+         'abc@gmail.com': '$2b$12$rqj0oZHzTuGh8fSJXFbrLOEMG6VQkCud4uNcD1y/bqN5Tm0Lc5EP.',
+         'def@gmail.com': '$2b$12$h8Dk54t93hoHMrcMcerEauDjxHUU4qU9aVxUbk9IJpFPgtGPsaQ9u',
+         'ghi@gmail.com': '2b$12$aOS/s.kqcn1CzZnUaIHNfeDYPWwlQJfqsO3mH/F5JEa59QMbG0eL2',
+         'secure@gmail.com': '$2b$12$PYVmkHz8gC0Srs96jUlvHeK4kT.l4vSem17TTmPaqC/nY0p4pUeDu'}
+
 
 questions = {
     "I ______ bus on Mondays.": {
@@ -33,3 +41,31 @@ questions = {
         "d. do your sister work": False
     }
 }
+
+
+def hash_password(plain_text_password):
+    # By using bcrypt, the salt is saved into the hash itself
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+
+if __name__ == '__main__':
+    # Test the above functions manually
+    original_password = 'my_very_secureP4ssword!'  # From registration form
+    print('original_password: ' + original_password)
+
+    hashed_password = hash_password(original_password)  # This shall be saved in the DB
+    print('hashed_password: ' + hashed_password)
+
+    user_input_password = 'Hey Siri, what is my password?'  # From a login form, a mistyped input
+    is_matching = verify_password(user_input_password, hashed_password)
+    print('is_matching: ' + str(is_matching))
+
+    user_input_password = 'my_very_secureP4ssword!'  # From a login form, the correct input
+    is_matching = verify_password(user_input_password, hashed_password)
+    print('is_matching: ' + str(is_matching))
