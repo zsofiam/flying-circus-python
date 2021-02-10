@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        p{
+            font-weight: bold;
+            margin-left: 20px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+<form action="/result" method="POST">
+{%for question in questions%}
+<p>{{question}}</p>
+
+
+    {%for answer in questions.get(question)%}
+    <input id="{{loop.index}}" type="radio" name="{{question}}" value="{{questions.get(question)[answer]}}">
+    <label for="{{loop.index}}">{{answer}}</label>
+    <small>{{loop.index}}</small>
+    <small>{{questions.get(question)[answer]}}</small>
+    <br><br>
+
+    {%endfor%}
+
+
+
+{%endfor%}
+    <button type="submit">SUBMIT</button>
+</form>
+</body>
+</html>

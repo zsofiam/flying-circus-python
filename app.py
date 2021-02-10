@@ -30,7 +30,7 @@ def login():
         session['email'] = request.form['email']
         session['password'] = request.form['password']
         password = session['password']
-        if 'email' in session and 'password' in session and session['email'] in data.users\
+        if 'email' in session and 'password' in session and session['email'] in data.users \
                 and data.verify_password(password, data.users[session['email']]):
             return redirect("/")
         else:
@@ -55,13 +55,33 @@ def logout():
     session.pop('password', None)
     return redirect(url_for('index'))
 
-# @app.route('/', methods=['GET', 'POST'])
-# def index():
-#     if request.method == 'POST':
-#         data_manager.create_comment(request.form.get('name'), request.form.get('text'))
-#
-#     comments = data_manager.get_comments()
-#     return render_template('index.html', comments=comments)
+
+@app.route('/test')
+def test():
+    if 'email' in session and 'password' in session and session['email'] in data.users \
+            and data.verify_password(session['password'], data.users[session['email']]):
+        questions=data.get_questions()
+        score = 0
+        return render_template("test.html", questions=questions)
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/result/', methods=["POST"])
+def result():
+    if request.method == "POST":
+        print(request.form)
+        questions = data.get_questions()
+        score = 0
+        for question in questions:
+            print(question in request.form, request.form[question])
+            if question in request.form and request.form[question] == 'True':
+                score += 1
+                print(score)
+        print(score)
+        return render_template("result.html", score=score)
+    else:
+        return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
