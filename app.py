@@ -12,9 +12,15 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 def index():
     if 'email' in session and 'password' in session and session['email'] in data.users \
             and data.verify_password(session['password'], data.users[session['email']]):
-        return 'Logged in as %s <br/><br/><a href="/logout">Logout</a>' % escape(session['email'])
+        return '<small>Logged in as %s </small>' \
+               '<h3>Hello, %s!</h3>' \
+               '<p>We are so happy to see you here!<p>' \
+               '<a href="/test">complete test</a>' \
+               '<br><br>' \
+               '<a href="/logout">Logout</a>' % (escape(session['email']), escape(session['email']))
     #return 'You are not logged in'
-    return redirect('/login')
+    return '<small>You are not logged in! </small>' \
+           '<a href="/login">Login</a>'
 
 
 @app.route('/login', methods=['GET', 'POST'])
